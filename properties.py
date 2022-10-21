@@ -4,7 +4,7 @@
 
 # Colección de alfabetos
 # Los caracteres admitidos, así como la complejidad de los mensajes, variará según el alfabeto elegido
-SIMPLE = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+SIMPLE = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz'
 COMPLEX = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚÜáéíóúü!"#$%&/()=?\'¿¡´¨+*-_,;.:[]<>|°¬\\}{ ~^`'
 
 # Alfabeto base para cifrar/descifrar y generar las llaves de cifrado

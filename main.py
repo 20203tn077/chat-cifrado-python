@@ -42,12 +42,16 @@ while not want_exit:
             loading('Conectando')
             if connection.connect(address):
                 remote_username = connection.remote_username
-                
                 loaded('Conectado con ' + remote_username)
+                print('\nEspera tu turno para enviar un mensaje, escribe /salir para salir del chat')
                 if (connection.first):
                     print('\nEnvía el primer mensaje')
                     
                     message = input('\n> ')
+                    # Validación de salida del chat
+                    if message == '/salir':
+                        connection.send('/salir')
+                        break
                     encrypted_message = encrypt(message, encryption_key)
                     connection.send(encrypted_message)
                     clear()
@@ -58,6 +62,11 @@ while not want_exit:
                 while True:
                     print('\nEsperando mensaje...', end='')
                     message = connection.listen()
+                    # Validación de salida del chat
+                    if message == '/salir':
+                        clear(inline=True)
+                        print(remote_username + ' ha abandonado el chat')
+                        break
                     decrypted_message = decrypt(message, encryption_key)
                     clear(inline=True)
                     if SHOW_ENCRYPTED_MESSAGES:
@@ -66,7 +75,9 @@ while not want_exit:
                     print('[' + remote_username + ']: ' + decrypted_message)
 
                     message = input('\n> ')
+                    # Validación de salida del chat
                     if message == '/salir':
+                        connection.send('/salir')
                         break
                     encrypted_message = encrypt(message, encryption_key)
                     connection.send(encrypted_message)

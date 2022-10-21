@@ -56,13 +56,16 @@ def warning(message):
     print('\n[!] ' + message + ' [!]')
     sleep(1)
 
+# Método para limpiear texto escrito en pantalla
 def clear(inline = False):
     print('\r' if inline else '\033[1A', end='\x1b[2K')
     
+# Método para mostrar un mensaje de carga
 def loading(message):
     print('\n' + message + '...')
     sleep(1)
-    
+
+# Método para mostrar mensaje tras mensaje de carga
 def loaded(message):
     clear()
     print(message)

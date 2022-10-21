@@ -2,15 +2,17 @@
 # Autor: Ricardo Cárdenas Guevara
 # Fecha de creación: 17/10/2022
 
+import socket
 from encryption_utils import *
 from file_utils import *
 from input_utils import *
 from connection_utils import Connection
+from properties import DEFAULT_PORT, SHOW_ENCRYPTED_MESSAGES
 
 encryption_key = generateKey()
-listening_port = 8000
-username = 'Host'
-guestname = ''
+listening_port = DEFAULT_PORT
+username = socket.gethostname()
+remote_username = ''
 
 want_exit = False
 
@@ -18,7 +20,7 @@ want_exit = False
 # Se sigue mostrando hasta que se elija la opción de salir
 while not want_exit:
     print('\n====================================')
-    print('>>           CRYPTO-CHAT          <<')
+    print('>>    CHAT CIFRADO CON PYTHON     <<')
     print('====================================')
     print('Usuario: [' + username + ']')
     print('Puerto de escucha: [' + str(listening_port) + ']')
@@ -31,33 +33,68 @@ while not want_exit:
     print('5.- Importar llave de cifrado')
     print('6.- Exportar llave de cifrado')
     print('7.- Salir')
-    option = select_option('\nSelecciona una opción:', range(1, 7))
+    option = select_option('\nSelecciona una opción:', range(1, 8))
     if option == 1:
-        print('\n INICIAR CHAT')
-        connection = Connection(listening_port)
-        address = input('\nIngresa la dirección de PENDIENTE:\n')
-        alert('Conectando...')
-        if (connection.connect(address)):
-            alert('Conectado')
-            if (connection.first):
-                connection.send(input('\nIngresa un mensaje:\n'))
-            while True:
-                print(connection.listen())
-                connection.send(input('\nIngresa un mensaje:\n'))
-        else:
-            warning('Error al establecer conexión')
+        print('\nINICIAR CHAT')
+        connection = Connection(listening_port, username)
+        try:
+            address = readAddress('\nIngresa la dirección del usuario remoto:\n')
+            loading('Conectando')
+            if connection.connect(address):
+                remote_username = connection.remote_username
+                
+                loaded('Conectado con ' + remote_username)
+                if (connection.first):
+                    print('\nEnvía el primer mensaje')
+                    
+                    message = input('\n> ')
+                    encrypted_message = encrypt(message, encryption_key)
+                    connection.send(encrypted_message)
+                    clear()
+                    print('[' + username + ']: ' + message)
+                    if SHOW_ENCRYPTED_MESSAGES:
+                        print(' 🔒↓↓↓')
+                        print('[' + username + ']: ' + encrypted_message)
+                while True:
+                    print('\nEsperando mensaje...', end='')
+                    message = connection.listen()
+                    decrypted_message = decrypt(message, encryption_key)
+                    clear(inline=True)
+                    if SHOW_ENCRYPTED_MESSAGES:
+                        print('[' + remote_username + ']: ' + message)
+                        print(' 🔓↓↓↓')
+                    print('[' + remote_username + ']: ' + decrypted_message)
+
+                    message = input('\n> ')
+                    if message == '/salir':
+                        break
+                    encrypted_message = encrypt(message, encryption_key)
+                    connection.send(encrypted_message)
+                    clear()
+                    print('[' + username + ']: ' + message)
+                    if SHOW_ENCRYPTED_MESSAGES:
+                        print(' 🔒↓↓↓')
+                        print('[' + username + ']: ' + encrypted_message)
+                        
+                connection.close()
+                alert('Chat finalizado')
+            else:
+                warning('Error al establecer conexión')
+        except:
+            connection.close()
+            alert('Chat finalizado')
     elif option == 2:
         print('\nCAMBIAR NOMBRE DE USUARIO')
-        if (confirm_option('\n¿Deseas cambiar puerto de usuario? se sobreescribirá el nombre actual (' + listening_port + ')')):
-            listening_port = readInt('\nIngresa el nuevo número de puerto:\n')
-            alert('Puerto cambiado')
+        if (confirm_option('\n¿Deseas cambiar tu nombre de usuario? se sobreescribirá el nombre actual (' + username + ')')):
+            username = input('\nIngresa el nuevo nombre de usuario:\n')
+            alert('Nombre cambiado')
         else:
             alert('Acción cancelada')
     elif option == 3:
         print('\nCAMBIAR PUERTO DE ESCUCHA')
-        if (confirm_option('\n¿Deseas cambiar puerto de escucha? se sobreescribirá el puerto actual (' + username + ')')):
-            username = readInt('\nIngresa el nuevo nombre de usuario:\n')
-            alert('Nombre cambiado')
+        if (confirm_option('\n¿Deseas cambiar puerto de escucha? se sobreescribirá el puerto actual (' + str(listening_port) + ')')):
+            listening_port = readInt('\nIngresa el nuevo número de puerto:\n')
+            alert('Puerto cambiado')
         else:
             alert('Acción cancelada')
     elif option == 4:

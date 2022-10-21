@@ -4,6 +4,7 @@
 
 # Importación de biblioteca de tiempo
 from time import sleep
+from properties import DEFAULT_PORT
 
 # Método para seleccionar una opción
 # No retorna un valor hasta que se elija una opción válida
@@ -31,11 +32,19 @@ def confirm_option(message):
 def readInt(message):
     while (True):
         try:
-            int_message = int(input(message))
+            int_value = int(input(message))
             break
         except:
             warning('Entrada inválida')
-    return int_message
+    return int_value
+
+# Método para leer direcciones ip o nombres de dominio
+# Agrega un puerto por defecto en caso de no especificarse
+def readAddress(message):
+    address = input(message)
+    if address.find(':') == -1:
+        address += ':' + str(DEFAULT_PORT)
+    return address
 
 # Métodos para imprimir alertas y advertencias
 # El programa se pausa un segundo para asegurar que el usuario pueda ver el mensaje
@@ -45,4 +54,16 @@ def alert(message):
 
 def warning(message):
     print('\n[!] ' + message + ' [!]')
+    sleep(1)
+
+def clear(inline = False):
+    print('\r' if inline else '\033[1A', end='\x1b[2K')
+    
+def loading(message):
+    print('\n' + message + '...')
+    sleep(1)
+    
+def loaded(message):
+    clear()
+    print(message)
     sleep(1)

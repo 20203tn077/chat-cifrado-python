@@ -11,5 +11,7 @@ COMPLEX = '0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyzÁ�
 ALPHABET = SIMPLE
 # Directorio de llaves de cifrado
 KEYS_DIR = 'llaves'
-# Directorio de archivos de texto
-MESSAGES_DIR = 'mensajes'
+# Puerto de escucha por defecto
+DEFAULT_PORT = 8000
+# Mostrar mensajes encriptados en pantalla
+SHOW_ENCRYPTED_MESSAGES = True

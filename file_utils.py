@@ -5,30 +5,12 @@
 # Importación de biblioteca de sistema operativo para las rutas
 import os
 # Importación de directorios desde archivo de configuración
-from properties import KEYS_DIR, MESSAGES_DIR
+from properties import KEYS_DIR
 
 # Todos los métodos se encargan de gestionar las posibles excepciones
 # Se utiliza os.path.join para generar la ruta final adecuada según el sistema operativo
 # Se utiliza el parámetro encoding para que los archivos con carácteres especiales sean escritos y leidos de forma correcta
 # Por seguridad, los archivos se guardan en carpetas aisladas, separandolas por tipo de archivo
-
-# Obtener mensaje desde archivo
-def get_message(name):
-    try:
-        file = open(os.path.join(MESSAGES_DIR, name + '.txt'), encoding='utf-8')
-        return file.read()
-    except:
-        return
-
-# Guardar mensaje en archivo
-def save_message(name, message):
-    try:
-        file = open(os.path.join(MESSAGES_DIR, name + '.txt'), 'w', encoding='utf-8')
-        file.write(message)
-        file.close
-        return True
-    except:
-        return False
 
 # Obtener llave de cifrado desde archivo  
 def get_encryption_key(name):

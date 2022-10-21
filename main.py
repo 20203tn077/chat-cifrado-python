@@ -6,7 +6,7 @@ import socket
 from encryption_utils import *
 from file_utils import *
 from input_utils import *
-from connection_utils import Connection
+from connection import Connection
 from properties import DEFAULT_PORT, SHOW_ENCRYPTED_MESSAGES
 
 encryption_key = generateKey()
@@ -46,7 +46,7 @@ while not want_exit:
                 print('\nEspera tu turno para enviar un mensaje, escribe /salir para salir del chat')
                 if (connection.first):
                     print('\nEnvía el primer mensaje')
-                    
+
                     message = input('\n> ')
                     # Validación de salida del chat
                     if message == '/salir':
@@ -86,7 +86,7 @@ while not want_exit:
                     if SHOW_ENCRYPTED_MESSAGES:
                         print(' 🔒↓↓↓')
                         print('[' + username + ']: ' + encrypted_message)
-                        
+
                 connection.close()
                 alert('Chat finalizado')
             else:
